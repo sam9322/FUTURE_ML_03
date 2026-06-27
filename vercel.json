@@ -6,10 +6,10 @@
       "use": "@vercel/python"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
+  "rewrites": [
+    { "source": "/extract-text", "destination": "/app.py" },
+    { "source": "/screen-form", "destination": "/app.py" },
+    { "source": "/screen-form-batch", "destination": "/app.py" },
+    { "source": "/health", "destination": "/app.py" }
   ]
 }
