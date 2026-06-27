@@ -1,9 +1,9 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/extract-text", "destination": "/app.py" },
-    { "source": "/screen-form", "destination": "/app.py" },
-    { "source": "/screen-form-batch", "destination": "/app.py" },
-    { "source": "/health", "destination": "/app.py" }
+    { "source": "/extract-text", "destination": "/api/index.py" },
+    { "source": "/screen-form", "destination": "/api/index.py" },
+    { "source": "/screen-form-batch", "destination": "/api/index.py" },
+    { "source": "/health", "destination": "/api/index.py" }
   ]
 }
