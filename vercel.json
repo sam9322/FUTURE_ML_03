@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    }
-  ],
   "rewrites": [
     { "source": "/extract-text", "destination": "/app.py" },
     { "source": "/screen-form", "destination": "/app.py" },
