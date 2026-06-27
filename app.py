@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
+from fastapi.security.api_key import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -342,7 +343,16 @@ def process_resume_text(job_description, resume_text, semantic_weight, skill_wei
 # FASTAPI APP
 # ============================================================
 
-app = FastAPI(title="Resume Screening API", version="3.1.0")
+API_KEY = "sam9322-resumeiq-2026-secret-key"
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
+
+async def get_api_key(api_key: str = Depends(api_key_header)):
+    if api_key == API_KEY:
+        return api_key
+    raise HTTPException(status_code=403, detail="Could not validate credentials")
+
+app = FastAPI(title="Resume Screening API", version="3.1.0", docs_url=None, redoc_url=None, openapi_url=None)
 
 app.add_middleware(
     CORSMiddleware,
@@ -366,7 +376,10 @@ def health():
 
 
 @app.post("/extract-text")
-async def extract_text_endpoint(file: UploadFile = File(...)):
+async def extract_text_endpoint(
+    file: UploadFile = File(...),
+    api_key: str = Depends(get_api_key)
+):
     try:
         content = await file.read()
         filename = file.filename
@@ -401,7 +414,8 @@ async def screen_form(
     semantic_weight: float = Form(0.7),
     skill_weight: float = Form(0.3),
     required_skills: str = Form("[]"),
-    job_title: str = Form("")
+    job_title: str = Form(""),
+    api_key: str = Depends(get_api_key)
 ):
     """
     Screen a single resume using FormData.
@@ -485,7 +499,8 @@ async def screen_form_batch(
     semantic_weight: float = Form(0.7),
     skill_weight: float = Form(0.3),
     required_skills: str = Form("[]"),
-    job_title: str = Form("")
+    job_title: str = Form(""),
+    api_key: str = Depends(get_api_key)
 ):
     try:
         frontend_skills = json.loads(required_skills)

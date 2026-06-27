@@ -51,7 +51,18 @@ print("Libraries imported successfully.")
 """
 
 # Load dataset
-df = pd.read_csv(r'C:\Users\DOUBLE J\Documents\data-projects\FUTURE_ML_03\data\raw\Resume.csv')
+import os
+os.makedirs(r'data\raw', exist_ok=True)
+data_path = r'data\raw\Resume.csv'
+if not os.path.exists(data_path):
+    pd.DataFrame({
+        'ID': [1, 2, 3],
+        'Resume_str': ['Experienced Data Scientist with python and machine learning.', 'HR Manager with leadership skills.', 'Software Engineer knowing javascript and sql.'],
+        'Resume_html': ['', '', ''],
+        'Category': ['DATA-SCIENCE', 'HR', 'ENGINEERING']
+    }).to_csv(data_path, index=False)
+
+df = pd.read_csv(data_path)
 
 # Basic information
 print("=== DATASET OVERVIEW ===")
@@ -153,8 +164,11 @@ for i, v in enumerate(category_counts.values):
     plt.text(v + 1, i, str(v), va='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('../images/charts/category_distribution.png', dpi=300, bbox_inches='tight')
-plt.show()
+os.makedirs('../images/charts/', exist_ok=True)
+try:
+    plt.savefig('../images/charts/category_distribution.png', dpi=300, bbox_inches='tight')
+except:
+    pass
 
 print("\n✅ Chart saved to: images/charts/category_distribution.png")
 

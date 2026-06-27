@@ -24,7 +24,7 @@ print("Libraries imported and NLTK data downloaded successfully.")
 
 
 # Load raw data
-df = pd.read_csv('../data/raw/Resume.csv')
+df = pd.read_csv('data/raw/Resume.csv')
 
 print(f"Loaded {len(df)} resumes")
 print(f"Columns: {df.columns.tolist()}")
@@ -119,10 +119,10 @@ Save the processed resumes to the processed data folder for use in Notebook 03.
 import os
 
 # Create processed directory if it doesn't exist
-os.makedirs('../data/processed', exist_ok=True)
+os.makedirs('data/processed', exist_ok=True)
 
 # Save cleaned dataset
-df.to_csv('../data/processed/resumes_cleaned.csv', index=False)
+df.to_csv('data/processed/resumes_cleaned.csv', index=False)
 
 print("✅ Cleaned dataset saved to: data/processed/resumes_cleaned.csv")
 print(f"   Shape: {df.shape}")

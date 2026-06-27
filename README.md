@@ -215,15 +215,19 @@ Then visit http://localhost:8080
 
 ### Request
 
+```bash
 curl -X POST https://sam9322-resume-screening-api.hf.space/screen-form \
+  -H "X-API-Key: sam9322-resumeiq-2026-secret-key" \
   -F "file=@resume.pdf" \
   -F "job_description=We need a Python developer with machine learning skills" \
   -F "semantic_weight=0.7" \
   -F "skill_weight=0.3" \
   -F 'required_skills=["Python","Machine Learning","SQL"]'
+```
 
 ### Response
 
+```json
 {
   "semantic_score": 0.74,
   "skill_score": 1.0,
@@ -234,6 +238,7 @@ curl -X POST https://sam9322-resume-screening-api.hf.space/screen-form \
   "candidate_name": "resume",
   "category": "Extracted from resume"
 }
+```
 
 ---
 

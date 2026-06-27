@@ -7,7 +7,7 @@ import re
 print(\)
 
 # Load cleaned resumes
-df = pd.read_csv('../data/processed/resumes_cleaned.csv')
+df = pd.read_csv('data/processed/resumes_cleaned.csv')
 print(f\)
 print(f\)
 
@@ -130,7 +130,7 @@ def rank_resumes_multistage(job_description, resume_embeddings, resume_df, model
 
 
 # Save the Sentence Transformer model (required for API)
-model.save('../models/sentence_transformer_model')
+model.save('models/sentence_transformer_model')
 
 print(\)
 
