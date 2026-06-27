@@ -10,5 +10,3 @@ PyPDF2
 python-docx
 spacy
 pdfminer.six
-docx2txt
-pyresparser
