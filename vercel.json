@@ -4,6 +4,7 @@
     { "source": "/extract-text", "destination": "/api/index.py" },
     { "source": "/screen-form", "destination": "/api/index.py" },
     { "source": "/screen-form-batch", "destination": "/api/index.py" },
-    { "source": "/health", "destination": "/api/index.py" }
+    { "source": "/health", "destination": "/api/index.py" },
+    { "source": "/", "destination": "/index.html" }
   ]
 }
