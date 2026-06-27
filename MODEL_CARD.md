@@ -8,7 +8,7 @@
 | Architecture | Sentence Transformer (all-MiniLM-L6-v2) + Hybrid Scoring |
 | Task | Resume screening and candidate ranking against job descriptions |
 | Training Date | April 2026 |
-| Author | sam9322 |
+| Author | samiksha|
 
 ## Model Description
 
@@ -207,12 +207,12 @@ curl -X POST https://sam9322-resume-screening-api.hf.space/screen-form \
 
 ## Author
 
-sam9322
+samiksha walbe
 Machine Learning Engineer
 
-LinkedIn: https://www.linkedin.com/in/sam9322
-GitHub: https://github.com/sam9322
-Email: sam9322@github.com
+LinkedIn: https://www.linkedin.com/in/samiksha-walbe
+GitHub: https://github.com/samiksha-walbe
+Email: samikshawalbe3516@gmail.com
 
 ## References
 
