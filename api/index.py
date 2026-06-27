@@ -364,6 +364,13 @@ app.add_middleware(
 
 @app.get("/")
 def root():
+    import os
+    from fastapi.responses import FileResponse
+    # Try to serve index.html from current dir or parent dir
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    elif os.path.exists("../index.html"):
+        return FileResponse("../index.html")
     return {"message": "Resume Screening API", "version": "3.1.0"}
 
 @app.get("/health")
