@@ -774,7 +774,7 @@ nav { flex: 1; padding: 20px 16px; overflow-y: auto; }
           <div class="card-header">API Configuration</div>
           <div class="card-body">
             <div class="form-group"><label>API Endpoint</label><input type="text" id="apiEndpoint"
-                value="http://localhost:7860"
+                value=""
                 style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;"></div><button
               class="btn" onclick="updateAPI()">Test Connection</button>
             <div id="apiTestResult" style="margin-top:12px;"></div>
@@ -817,7 +817,8 @@ nav { flex: 1; padding: 20px 16px; overflow-y: auto; }
 
   <script>
 'use strict';
-const DEFAULT_API = 'http://localhost:7860';
+const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const DEFAULT_API = isLocal ? 'http://localhost:7860' : '';
 let API = DEFAULT_API;
 let files = [];
 let results = [];
@@ -1031,7 +1032,7 @@ function saveDefaultWeights(){ const sem=document.getElementById('defaultSemWeig
 function saveThreshold(){ const threshold=document.getElementById('thresholdValue').value; localStorage.setItem('resumeIQ_threshold',threshold); document.getElementById('apiTestResult').innerHTML='<span style="color:var(--green);">Threshold saved.</span>'; }
 function exportAllData(){ const data={results:results,shortlisted:JSON.parse(localStorage.getItem('resumeIQ_shortlisted')||'[]'),skills:skills,settings:{api:localStorage.getItem('resumeIQ_api'),semWeight:localStorage.getItem('resumeIQ_semWeight'),skillWeight:localStorage.getItem('resumeIQ_skillWeight'),threshold:localStorage.getItem('resumeIQ_threshold')}}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`resumeiq_export_${new Date().toISOString().slice(0,19)}.json`; a.click(); URL.revokeObjectURL(url); toast('s','Export complete','All data exported as JSON'); }
 function clearAllData(){ if(confirm('Delete all screening results, shortlisted candidates, and settings?')){ localStorage.clear(); location.reload(); } }
-function loadSettings(){ const savedApi=localStorage.getItem('resumeIQ_api'); if(savedApi) document.getElementById('apiEndpoint').value=savedApi; const savedSem=localStorage.getItem('resumeIQ_semWeight'); if(savedSem) document.getElementById('defaultSemWeight').value=savedSem; const savedSkill=localStorage.getItem('resumeIQ_skillWeight'); if(savedSkill) document.getElementById('defaultSkillWeight').value=savedSkill; const savedThreshold=localStorage.getItem('resumeIQ_threshold'); if(savedThreshold) document.getElementById('thresholdValue').value=savedThreshold; }
+function loadSettings(){ const savedApi=localStorage.getItem('resumeIQ_api'); if(savedApi) document.getElementById('apiEndpoint').value=savedApi; else localStorage.removeItem('resumeIQ_api'); const savedSem=localStorage.getItem('resumeIQ_semWeight'); if(savedSem) document.getElementById('defaultSemWeight').value=savedSem; const savedSkill=localStorage.getItem('resumeIQ_skillWeight'); if(savedSkill) document.getElementById('defaultSkillWeight').value=savedSkill; const savedThreshold=localStorage.getItem('resumeIQ_threshold'); if(savedThreshold) document.getElementById('thresholdValue').value=savedThreshold; }
 const ICONS={s:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',e:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',i:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'};
 function toast(type,title,msg){ const el=document.createElement('div'); el.className=`toast ts`; if(type==='e')el.className='toast te'; else if(type==='i')el.className='toast ti'; else el.className='toast ts'; el.innerHTML=`<div class="tic">${ICONS[type]||ICONS.i}</div><div class="tt"><div class="ttl">${esc(title)}</div><div class="tmg">${esc(msg||'')}</div></div>`; document.getElementById('toasts').appendChild(el); setTimeout(()=>{el.style.animation='tOut .25s ease forwards';setTimeout(()=>el.remove(),260);},4500); }
 function esc(s){if(typeof s!=='string')return String(s||'');return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
