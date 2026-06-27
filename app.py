@@ -42,19 +42,24 @@ try:
 except ImportError:
     PYRESPARSER_SUPPORT = False
 
-# Download NLTK data
+# Setup NLTK data directory for Vercel Serverless (read-only filesystem workaround)
+import os
+os.makedirs('/tmp/nltk_data', exist_ok=True)
+nltk.data.path.append('/tmp/nltk_data')
+
+# Download NLTK data to /tmp
 try:
     nltk.data.find('corpora/stopwords')
 except LookupError:
-    nltk.download('stopwords')
+    nltk.download('stopwords', download_dir='/tmp/nltk_data')
 try:
     nltk.data.find('corpora/wordnet')
 except LookupError:
-    nltk.download('wordnet')
+    nltk.download('wordnet', download_dir='/tmp/nltk_data')
 try:
     nltk.data.find('corpora/omw-1.4')
 except LookupError:
-    nltk.download('omw-1.4')
+    nltk.download('omw-1.4', download_dir='/tmp/nltk_data')
 
 # Initialize NLTK components
 lemmatizer = WordNetLemmatizer()
@@ -71,13 +76,17 @@ class SkillExtractor:
     def __init__(self):
         """Initialize skill extractor with NLP capabilities."""
         try:
-            self.nlp = spacy.load("en_core_web_sm")
-            print("spaCy model loaded")
+            import en_core_web_sm
+            self.nlp = en_core_web_sm.load()
+            print("spaCy model loaded from direct import")
         except:
-            import subprocess
-            subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
-            self.nlp = spacy.load("en_core_web_sm")
-            print("spaCy model downloaded and loaded")
+            try:
+                self.nlp = spacy.load("en_core_web_sm")
+                print("spaCy model loaded")
+            except:
+                # Fallback to empty model for Vercel if install fails
+                self.nlp = spacy.blank("en")
+                print("Fallback: Using blank spaCy model")
     
     def extract(self, text):
         """Extract skills from job description using multiple NLP methods."""
