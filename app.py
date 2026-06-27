@@ -8,7 +8,6 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
@@ -61,10 +60,8 @@ except LookupError:
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
-# Load Sentence Transformer model
-print("Loading model...")
-model = SentenceTransformer('all-MiniLM-L6-v2')
-print("Model loaded")
+# Removing SentenceTransformer to fit Vercel Serverless Limits
+# semantic_model will be computed via TF-IDF at request time
 
 # ============================================================
 # PROFESSIONAL SKILL EXTRACTOR (No Hardcoded Lists)
@@ -292,8 +289,12 @@ def process_resume_text(job_description, resume_text, semantic_weight, skill_wei
     jd_clean = clean_and_lemmatize(job_description)
     resume_clean = clean_and_lemmatize(resume_text)
     
-    embeddings = model.encode([jd_clean, resume_clean])
-    semantic_score = cosine_similarity([embeddings[0]], [embeddings[1]])[0][0]
+    try:
+        tfidf_vec = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = tfidf_vec.fit_transform([jd_clean, resume_clean])
+        semantic_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+    except Exception:
+        semantic_score = 0.0
     
     job_skills = list(skill_patterns.keys())
     resume_skills = extract_skills_with_patterns(resume_text, skill_patterns)
